@@ -11,7 +11,7 @@ const LinkButton = ({ btnLink, btnStyle, btnTitle }: BtnProps) => {
     <Link
       href={btnLink}
       className={`${btnStyle}text-sm  capitalize flex items-center justify-center px-5 py-2 transition-all transform 
-         hover:-translate-y-1 ease-in duration-300    cursor-pointer         `}
+         hover:-translate-y-1 ease-in duration-300    cursor-pointer   rounded-sm   text-gray-100   `}
     >
       {btnTitle}
     </Link>

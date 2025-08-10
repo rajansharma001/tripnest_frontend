@@ -10,9 +10,10 @@ interface BtnProps {
 const ClickButton = ({ btnClick, btnStyle, btnTitle }: BtnProps) => {
   return (
     <button
+      type="submit"
       onClick={btnClick}
       className={`${btnStyle}text-sm text-white capitalize flex items-center justify-center px-5 py-2 transition-all transform 
-         hover:-translate-y-1 ease-in duration-300    cursor-pointer     `}
+         hover:-translate-y-1 ease-in duration-300    cursor-pointer  rounded-sm   `}
     >
       {btnTitle}
     </button>
