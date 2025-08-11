@@ -94,10 +94,13 @@ const TripForm = () => {
       ) : (
         <form
           onSubmit={handleSubmit}
-          className="w-[75%] flex  flex-col flex-wrap justify-center items-center rounded-sm p-5 gap-2 bg-gray-100 shadow-3xl shadow-gray-600"
+          className="w-full lg:w-[75%] md:w-[75%] flex  flex-col flex-wrap justify-center items-center rounded-sm p-5 gap-2 bg-gray-100 shadow-3xl shadow-gray-600"
         >
-          <div className="w-full flex justify-center items-center gap-2 ">
-            <div className="w-3/12">
+          <h1 className="w-full text-center text-lg lg:text-2xl md:text-xl font-bold text-text-primary tracking-wide drop-shadow-lg capitalize gap-2">
+            Find your dream vacation with TripNest AI
+          </h1>
+          <div className="w-full flex flex-col lg:flex-row md:flex-row justify-center items-center gap-2 ">
+            <div className="w-full lg:w-3/12 md:w-3/12">
               <input
                 type="text"
                 value={formData.tripTitle}
@@ -107,7 +110,7 @@ const TripForm = () => {
                 className="p-2 text-text-primary text-sm focus:outline-primary border-2 border-gray-200 rounded-sm w-full"
               />
             </div>
-            <div className="w-3/12">
+            <div className="w-full lg:w-3/12 md:w-3/12">
               <input
                 type="text"
                 value={formData.currentLocation}
@@ -117,7 +120,7 @@ const TripForm = () => {
                 name="currentLocation"
               />
             </div>
-            <div className="w-3/12">
+            <div className="w-full lg:w-3/12 md:w-3/12">
               <input
                 type="text"
                 value={formData.tripLocation}
@@ -127,7 +130,7 @@ const TripForm = () => {
                 name="tripLocation"
               />
             </div>
-            <div className="w-3/12">
+            <div className="w-full lg:w-3/12 md:w-3/12">
               <select
                 name="tripType"
                 id=""
@@ -142,17 +145,25 @@ const TripForm = () => {
               </select>
             </div>
           </div>
-          <div className="w-full flex justify-between items-center gap-2 ">
-            <div className="w-3/12">
+          <div className="w-full flex flex-col lg:flex-row md:flex-row justify-between items-center gap-2 ">
+            <div className="w-full lg:w-3/12 md:w-3/12 flex flex-col lg:flex-row md:flex-row">
+              <label className="text-sm  text-gray-600" htmlFor="startDate">
+                Start Trip
+              </label>
+
               <input
                 type="date"
+                placeholder="Start Date"
                 value={formData.startDate}
                 onChange={handleChange}
                 className="p-2 text-text-primary text-sm focus:outline-primary border-2 border-gray-200 rounded-sm w-full"
                 name="startDate"
               />
             </div>
-            <div className="w-3/12">
+            <div className="w-full lg:w-3/12 md:w-3/12 flex flex-col lg:flex-row md:flex-row">
+              <label className="text-sm  text-gray-600" htmlFor="endDate">
+                End Trip
+              </label>
               <input
                 type="date"
                 value={formData.endDate}
@@ -161,7 +172,7 @@ const TripForm = () => {
                 name="endDate"
               />
             </div>
-            <div className="w-2/12">
+            <div className="w-full lg:w-2/12 md:w-2/12">
               <input
                 type="number"
                 value={formData.budget}
@@ -171,7 +182,7 @@ const TripForm = () => {
                 name="budget"
               />
             </div>
-            <div className="w-2/12">
+            <div className="w-full lg:w-2/12 md:w-2/12">
               <input
                 type="number"
                 value={formData.numberOfPeople}

@@ -1,8 +1,5 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import TripForm from "./TripForm";
-import { useAuth } from "../../context/authContext";
-import ClickButton from "./ClickButton";
 import {
   BudgetBreakDown,
   DailyPlan,
@@ -13,71 +10,110 @@ import {
 } from "../../types";
 import { CgClose } from "react-icons/cg";
 
-const Hero = () => {
-  const { user } = useAuth();
+const TripFeed = () => {
+  const [tripFeed, setTripFeed] = useState<TripTypes[] | null>(null);
   const [tripViewOpen, setTripViewOpen] = useState(false);
-  const [lastTrip, setLastTrip] = useState<TripTypes>();
+  const [tripId, setTripId] = useState("");
+  const [singleTrip, setsingleTrip] = useState<TripTypes>();
 
-  const fetchLastTrip = async () => {
+  const fetchTripFeed = async () => {
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/trip/get-trip`,
-        {
-          method: "GET",
-          credentials: "include",
-        }
+        `${process.env.NEXT_PUBLIC_API_URL}/trip/get-feed`
       );
       const result = await res.json();
-      setLastTrip(result.latestTrip);
+      setTripFeed(result.getTripFeed);
     } catch (error) {
-      console.log("Fetching error", error);
+      console.log("Trip feed fetch error", error);
+    }
+  };
+
+  const fetchTripFeedById = async () => {
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/trip/get-feed/${tripId}`
+      );
+      const result = await res.json();
+      setsingleTrip(result.getTripFeedById);
+    } catch (error) {
+      console.log("Trip feed fetch error", error);
     }
   };
 
   useEffect(() => {
-    fetchLastTrip();
-  }, [tripViewOpen]);
+    fetchTripFeed();
+    fetchTripFeedById();
+  }, []);
+
+  useEffect(() => {
+    fetchTripFeedById();
+  }, [tripId]);
 
   return (
-    <div className="relative w-full mt-18 bg-[url('/carImg1.jpg')] h-[600px] bg-cover bg-center bg-no-repeat flex justify-center items-center">
-      <div className="w-full p-3 lg:p-5 ]">
-        <TripForm />
-        {user && lastTrip && (
-          <div className="w-full flex bottom-3 items-center justify-center mt-4">
-            <ClickButton
-              btnTitle="View your last trip"
-              btnClick={() => setTripViewOpen(!tripViewOpen)}
-              btnStyle="bg-primary hover:bg-primary-hover text-text-primary"
-            />
-          </div>
-        )}
+    <div className=" w-full flex flex-col py-15 justify-center items-center">
+      <h1 className="text-2xl font-bold text-text-primary capitalize py-5">
+        Latest Trip Feed
+      </h1>
+      <div className="w-[70%] flex gap-4 flex-wrap justify-center items-center">
+        {/* trip card */}
+        {tripFeed &&
+          tripFeed.map((trip) => (
+            <div
+              key={trip._id}
+              className="w-4/10   cursor-pointer"
+              onClick={() => {
+                setTripId(trip._id);
+                setTripViewOpen(!tripViewOpen);
+              }}
+            >
+              <div className=" w-full ">
+                {/* Trip Header */}
+                <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-6 rounded-2xl shadow-lg">
+                  <h1 className="text-xl font-bold">{trip?.tripTitle}</h1>
+                  <p className="mt-2 text-md font-medium">
+                    {trip?.currentLocation} → {trip?.tripLocation}
+                  </p>
+                  <p className="text-sm opacity-80">
+                    {new Date(trip?.startDate as Date).toDateString()} –
+                    {new Date(trip?.endDate as Date).toDateString()}
+                  </p>
+                  <div className="mt-3 flex gap-x-1 text-sm">
+                    <p>Type: {trip?.tripType}</p>
+                    <p>People: {trip?.numberOfPeople}</p>
+                    <p className="col-span-2 text-red-200">
+                      Visibility: {trip?.visibility ? "Yes" : "No"}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
       </div>
 
       {tripViewOpen && (
-        <div className="absolute w-full shadow-2xl shadow-black rounded-lg h-screen top-0 px-3 lg:p-6">
-          <div className="relative w-full mx-auto lg:p-6 space-y-6 top-10 overflow-scroll h-screen backdrop-blur-2xl ">
-            <CgClose
-              onClick={() => setTripViewOpen(!tripViewOpen)}
-              className="absolute right-10 top-10 cursor-pointer text-white hover:text-gray-200 transition"
-              size={24}
-              aria-label="Close trip view"
-            />
-
+        <div className="fixed w-full shadow-2xl shadow-black rounded-lg max-h-full top-0 px-3 lg:p-6 backdrop-blur-3xl">
+          <CgClose
+            onClick={() => setTripViewOpen(!tripViewOpen)}
+            className="absolute right-10  cursor-pointer text-white hover:text-gray-200 transition rounded-full bg-primary  p-2 "
+            size={34}
+            aria-label="Close trip view"
+          />
+          <div className="relative w-full mx-auto lg:p-16 space-y-6 top-10 overflow-scroll h-screen backdrop-blur-2xl ">
             {/* Trip Header */}
             <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-6 rounded-2xl shadow-lg">
-              <h1 className="text-3xl font-bold">{lastTrip?.tripTitle}</h1>
+              <h1 className="text-3xl font-bold">{singleTrip?.tripTitle}</h1>
               <p className="mt-2 text-lg font-medium">
-                {lastTrip?.currentLocation} → {lastTrip?.tripLocation}
+                {singleTrip?.currentLocation} → {singleTrip?.tripLocation}
               </p>
               <p className="text-sm opacity-80">
-                {new Date(lastTrip?.startDate as Date).toDateString()} –{" "}
-                {new Date(lastTrip?.endDate as Date).toDateString()}
+                {new Date(singleTrip?.startDate as Date).toDateString()} –{" "}
+                {new Date(singleTrip?.endDate as Date).toDateString()}
               </p>
               <div className="mt-3 flex flex-col gap-y-1 text-sm">
-                <p>Type: {lastTrip?.tripType}</p>
-                <p>People: {lastTrip?.numberOfPeople}</p>
+                <p>Type: {singleTrip?.tripType}</p>
+                <p>People: {singleTrip?.numberOfPeople}</p>
                 <p className="col-span-2 text-red-200">
-                  Visibility: {lastTrip?.visibility ? "Yes" : "No"}
+                  Visibility: {singleTrip?.visibility ? "Yes" : "No"}
                 </p>
               </div>
             </div>
@@ -88,7 +124,7 @@ const Hero = () => {
                 Trip Overview
               </h2>
               <div className="space-y-3 text-gray-700">
-                {lastTrip?.tripOverview?.map(
+                {singleTrip?.tripOverview?.map(
                   (
                     { destination, duration, budget }: TripOverview,
                     index: number
@@ -109,7 +145,7 @@ const Hero = () => {
                 Daily Plan
               </h2>
               <div className="space-y-4">
-                {lastTrip?.dailyPlan?.map(
+                {singleTrip?.dailyPlan?.map(
                   ({ day, title, activities }: DailyPlan, index: number) => (
                     <div key={index}>
                       <h3 className="font-semibold text-lg">{day}</h3>
@@ -132,7 +168,7 @@ const Hero = () => {
               <h2 className="font-bold text-xl mb-4 text-gray-800">
                 Budget Breakdown
               </h2>
-              {lastTrip?.budgetBreakdown?.map(
+              {singleTrip?.budgetBreakdown?.map(
                 (
                   {
                     totalBudget,
@@ -177,7 +213,7 @@ const Hero = () => {
               <h2 className="font-bold text-xl mb-4 text-gray-800">
                 Local Tips
               </h2>
-              {lastTrip?.localTips?.map(
+              {singleTrip?.localTips?.map(
                 (
                   {
                     currency,
@@ -223,7 +259,7 @@ const Hero = () => {
             {/* Summary */}
             <div className="bg-white rounded-xl shadow p-6">
               <h2 className="font-bold text-xl mb-4 text-gray-800">Summary</h2>
-              {lastTrip?.summary?.map(
+              {singleTrip?.summary?.map(
                 (
                   { highlights, recommendation, extras }: Summary,
                   index: number
@@ -260,4 +296,4 @@ const Hero = () => {
   );
 };
 
-export default Hero;
+export default TripFeed;
