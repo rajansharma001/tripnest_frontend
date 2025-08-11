@@ -7,11 +7,14 @@ import {
   Summary,
   TripOverview,
   TripTypes,
+  UserTypes,
 } from "../../types";
 import { CgClose } from "react-icons/cg";
 
 const TripFeed = () => {
   const [tripFeed, setTripFeed] = useState<TripTypes[] | null>(null);
+  const [user, setUser] = useState<UserTypes[] | null>(null);
+
   const [tripViewOpen, setTripViewOpen] = useState(false);
   const [tripId, setTripId] = useState("");
   const [singleTrip, setsingleTrip] = useState<TripTypes>();
@@ -23,6 +26,18 @@ const TripFeed = () => {
       );
       const result = await res.json();
       setTripFeed(result.getTripFeed);
+    } catch (error) {
+      console.log("Trip feed fetch error", error);
+    }
+  };
+
+  const getUser = async () => {
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/user/public-user`
+      );
+      const result = await res.json();
+      setUser(result.getPublicUser);
     } catch (error) {
       console.log("Trip feed fetch error", error);
     }
@@ -42,7 +57,7 @@ const TripFeed = () => {
 
   useEffect(() => {
     fetchTripFeed();
-    fetchTripFeedById();
+    getUser();
   }, []);
 
   useEffect(() => {
@@ -54,13 +69,14 @@ const TripFeed = () => {
       <h1 className="text-2xl font-bold text-text-primary capitalize py-5">
         Latest Trip Feed
       </h1>
-      <div className="w-[70%] flex gap-4 flex-wrap justify-center items-center">
+      <div className="w-full  md:w-full lg:w-[70%] flex flex-col lg:flex-row gap-3 flex-wrap justify-center items-center">
         {/* trip card */}
         {tripFeed &&
           tripFeed.map((trip) => (
             <div
               key={trip._id}
-              className="w-4/10   cursor-pointer"
+              className="w-full lg:w-5/12 px-3
+                cursor-pointer"
               onClick={() => {
                 setTripId(trip._id);
                 setTripViewOpen(!tripViewOpen);
@@ -68,20 +84,45 @@ const TripFeed = () => {
             >
               <div className=" w-full ">
                 {/* Trip Header */}
-                <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-6 rounded-2xl shadow-lg">
+                <div className="bg-gradient-to-r bg-primary-hover hover:bg-primary text-gray-100 p-6 rounded-2xl shadow-lg hover:-translate-y-1 transition-all transform duration-300 ease-in ">
                   <h1 className="text-xl font-bold">{trip?.tripTitle}</h1>
-                  <p className="mt-2 text-md font-medium">
+                  <p className="mt-2 text-md font-medium ">
                     {trip?.currentLocation} → {trip?.tripLocation}
                   </p>
-                  <p className="text-sm opacity-80">
+                  <p className="text-sm opacity-80 ">
                     {new Date(trip?.startDate as Date).toDateString()} –
                     {new Date(trip?.endDate as Date).toDateString()}
                   </p>
-                  <div className="mt-3 flex gap-x-1 text-sm">
+                  <div className="mt-3 flex justify-between gap-x-1 text-sm">
                     <p>Type: {trip?.tripType}</p>
                     <p>People: {trip?.numberOfPeople}</p>
                     <p className="col-span-2 text-red-200">
                       Visibility: {trip?.visibility ? "Yes" : "No"}
+                    </p>
+                  </div>
+                  <div className="border-b-2 py-1 border-gray-200"></div>
+                  <div className="w-full text-sm mt-1 flex justify-between ">
+                    <p className="text-[12px] capitalize">
+                      Created by:
+                      <strong>
+                        {user &&
+                          user?.map(
+                            (u) => u._id === trip.userId && ` ${u.firstName}`
+                          )}
+                      </strong>
+                    </p>
+                    <p className="text-[12px] capitalize">
+                      updatedAt
+                      <strong>
+                        {user &&
+                          user?.map(
+                            (u) =>
+                              u._id === trip.userId &&
+                              ` ${new Date(
+                                trip.updatedAt as Date
+                              ).toLocaleDateString()}`
+                          )}
+                      </strong>
                     </p>
                   </div>
                 </div>
