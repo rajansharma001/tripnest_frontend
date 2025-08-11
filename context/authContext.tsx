@@ -27,7 +27,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const logoutUser = async () => {
     await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/logout`, {
-      method: "POST",
+      method: "GET",
       credentials: "include",
     });
     setUser(null);

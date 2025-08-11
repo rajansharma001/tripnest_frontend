@@ -20,7 +20,7 @@ export default function RootLayout({
       <body>
         <AuthProvider>
           <div className="relative min-h-screen flex flex-col">
-            <header className="w-full fixed ">
+            <header className="w-full ">
               <Header />
             </header>
 

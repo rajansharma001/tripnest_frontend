@@ -46,6 +46,14 @@ const Header = () => {
               className="bg-cover rounded-full h-10 w-10 cursor-pointer"
             />
           </div>
+          <div className=" ">
+            <button
+              onClick={logoutUser}
+              className="text-sm font-semibold p-2 bg-primary rounded-sm text-white hover:bg-primary-hover w-full hover:text-gray-100 transition-all hover:-translate-y-1 ease-in duration-300 text-left cursor-pointer "
+            >
+              Logout
+            </button>
+          </div>
         </div>
       ) : (
         <div className="w-full flex justify-end items-center gap-2">
@@ -70,8 +78,8 @@ const Header = () => {
       )}
 
       {isProfileOpen && (
-        <div className="absolute top-20 right-3  md:right-7 lg:right-10 :w-[5%] lg:w-[18%] md:w-[13%] flex flex-col items-start  p-3 shadow-2xl shadow-gray-600 rounded-sm transition-all hover:-translate-y-1 ease-in duration-300">
-          <a
+        <div className="absolute top-20 right-3 z-50 bg-white md:right-7 lg:right-10 :w-[5%] lg:w-[18%] md:w-[13%] flex flex-col items-start  p-3 shadow-2xl shadow-gray-600 rounded-sm transition-all hover:-translate-y-1 ease-in duration-300">
+          {/* <a
             href="/user/dashboard"
             className="text-sm font-semibold p-2 hover:bg-primary-hover w-full hover:text-gray-100 transition-all hover:-translate-y-1 ease-in duration-300"
           >
@@ -82,13 +90,7 @@ const Header = () => {
             className="text-sm font-semibold p-2 hover:bg-primary-hover w-full hover:text-gray-100 transition-all hover:-translate-y-1 ease-in duration-300 "
           >
             Profile
-          </a>
-          <button
-            onClick={() => logoutUser}
-            className="text-sm font-semibold p-2 hover:bg-primary-hover w-full hover:text-gray-100 transition-all hover:-translate-y-1 ease-in duration-300 text-left cursor-pointer "
-          >
-            Logout
-          </button>
+          </a> */}
         </div>
       )}
     </div>

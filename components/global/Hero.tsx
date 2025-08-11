@@ -39,7 +39,7 @@ const Hero = () => {
   }, [tripViewOpen]);
 
   return (
-    <div className="relative w-full mt-18 bg-[url('/carImg1.jpg')] h-[600px] bg-cover bg-center bg-no-repeat flex justify-center items-center">
+    <div className="relative w-full bg-[url('/carImg1.jpg')] h-[600px] bg-cover bg-center bg-no-repeat flex justify-center items-center">
       <div className="w-full p-3 lg:p-5 ]">
         <TripForm />
         {user && lastTrip && (
